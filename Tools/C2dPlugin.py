@@ -19,13 +19,13 @@ class DisponseHandle(Handle):
 
 	def handle(self):
 		if not os.path.exists('%s/Classes' % os.getcwd()):
-			print('当前目录不是cocos2d-x项目,请切换到cocos2d-x项目中!')
+			print(u'当前目录不是cocos2d-x项目,请切换到cocos2d-x项目中!')
 		else:
 			hds = {'init':InitHandle,'add':AddHandle,'rm':RmHandle}
 			if len(sys.argv) > 2 and sys.argv[2] in hds:
 				hds[sys.argv[2]]().handle()
 			else:
-				print('参数不对!')
+				print(u'参数不对!')
 
 class InitHandle(Handle):
 	def __init__(self):
@@ -40,11 +40,11 @@ class InitHandle(Handle):
 				file_lib = zipfile.ZipFile(path_lib)
 				file_lib.extractall('%s/Classes' % os.getcwd())
 				file_lib.close()
-				print('初始化成功!')
+				print(u'初始化成功!')
 			else:
-				print('暂时不支持此平台!')
+				print(u'暂时不支持此平台!')
 		else:
-			print("初始化失败,缺少平台参数!")
+			print(u"初始化失败,缺少平台参数!")
 
 
 class AddHandle(Handle):
@@ -62,7 +62,7 @@ class AddHandle(Handle):
 			hds[platform](plugin).install()
 			pass
 		else:
-			print('未查到插件或%s平台安装包!' % platform)
+			print(u'未查到插件或%s平台安装包!' % platform)
 
 
 class RmHandle(Handle):
@@ -78,7 +78,7 @@ class RmHandle(Handle):
 			hds[platform](plugin).unInstall()
 			pass
 		else:
-			print('未查到插件或%s平台安装包!' % platform)
+			print(u'未查到插件或%s平台安装包!' % platform)
 
 
 class PlatformHandle(object):
@@ -118,9 +118,11 @@ class PlatformHandle(object):
 		for file_name in file_list:
 			file_real = '%s/%s' % (src,file_name)
 			if os.path.isdir(file_real):
-				self.delete(file_real,'%s/%s' % (desc,file_name))
-				if len('%s/%s' % (desc,file_name)) == 0:
-					os.remove('%s/%s' % (desc,file_name))
+				file_real = '%s/%s' % (desc,file_name)
+				self.delete(file_real,file_real)
+				if len(os.listdir(file_real)) == 0:
+					os.rmdir(file_real)
+				
 			elif os.path.exists('%s/%s' % (desc,file_name)):
 				file_real = '%s/%s' % (desc,file_name)
 				os.remove(file_real)
@@ -147,9 +149,9 @@ class AndroidPlatformHandle(PlatformHandle):
 				src = '%s/android/resource' % self.path_plugin
 				desc = '%s/Resources' % os.getcwd()
 				self.copy(src,desc)
-			print('插件"%s"安装成功!' % self.plugin)
+			print(u'插件"%s"安装成功!' % self.plugin)
 		else:
-			print('插件不支持Android平台!')
+			print(u'插件不支持Android平台!')
 
 	def unInstall(self):
 		json_plugin = self.loadPluginJson()
@@ -167,9 +169,9 @@ class AndroidPlatformHandle(PlatformHandle):
 				src = '%s/android/resource' % self.path_plugin
 				desc = '%s/Resources' % os.getcwd()
 				self.delete(src,desc)
-			print('插件"%s"卸载成功!' % self.plugin)
+			print(u'插件"%s"卸载成功!' % self.plugin)
 		else:
-			print('插件不支持Android平台!')
+			print(u'插件不支持Android平台!')
 
 
 class IOSPlatformHandle(PlatformHandle):
@@ -192,9 +194,9 @@ class IOSPlatformHandle(PlatformHandle):
 				src = '%s/ios/resource' % self.path_plugin
 				desc = '%s/Resources' % os.getcwd()
 				self.copy(src,desc)
-			print('插件"%s"安装成功!' % self.plugin)
+			print(u'插件"%s"安装成功!' % self.plugin)
 		else:
-			print('插件不支持IOS平台!')
+			print(u'插件不支持IOS平台!')
 
 	def unInstall(self):
 		json_plugin = self.loadPluginJson()
@@ -212,12 +214,11 @@ class IOSPlatformHandle(PlatformHandle):
 				src = '%s/ios/resource' % self.path_plugin
 				desc = '%s/Resources' % os.getcwd()
 				self.delete(src,desc)
-			print('插件"%s"安装成功!' % self.plugin)
+			print(u'插件"%s"安装成功!' % self.plugin)
 		else:
-			print('插件不支持IOS平台!')
+			print(u'插件不支持IOS平台!')
 
 
 
 if __name__ == '__main__':
 	DisponseHandle().handle()
-	# help(os)
