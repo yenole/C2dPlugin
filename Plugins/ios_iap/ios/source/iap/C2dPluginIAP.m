@@ -6,27 +6,39 @@
 //
 //
 
-#import "IAPPay.h"
-#include "cocos2d.h"
+#import "C2dPluginIAP.h"
 
-@implementation IAPPay
+@implementation C2dPluginIAP
 
-static IAPPay * gInstance = nil;
 
-+ (IAPPay *)ShareInstance
+-(NSString *)invoke:(NSString *)funcName
 {
-    if(!gInstance)
-    {
-        gInstance = [[IAPPay alloc] init];
-        [[SKPaymentQueue defaultQueue] addTransactionObserver:gInstance];
+    if ([@"init" isEqualToString:funcName]) {
+        [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+        return @"1";
     }
-    return gInstance;
+    else if ([@"buy" isEqualToString:funcName]){
+        if ([SKPaymentQueue canMakePayments]) {
+            
+            NSArray* transactions = [SKPaymentQueue defaultQueue].transactions;
+            if (transactions.count > 0) {
+                //检测是否有未完成的交易
+                SKPaymentTransaction* transaction = [transactions firstObject];
+                if (transaction.transactionState == SKPaymentTransactionStatePurchased) {
+                    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                }
+            }
+            
+            NSSet * set = [NSSet setWithArray:@[[self getStringArgv]]];
+            SKProductsRequest * request = [[SKProductsRequest alloc] initWithProductIdentifiers:set];
+            request.delegate = self;
+            [request start];
+            return @"1";
+        }
+    }
+    return nil;
 }
 
--(BOOL)canMakePayments
-{
-    return [SKPaymentQueue canMakePayments];
-}
 
 -(void)buyWithProduceId:(NSString *)proid
 {
@@ -51,7 +63,7 @@ static IAPPay * gInstance = nil;
     NSArray *myProduct = response.products;
     if (myProduct.count == 0) {
         NSLog(@"无法获取产品信息，购买失败。");
-        cocos2d::CCNotificationCenter::sharedNotificationCenter()->postNotification("IAP_MSG");
+        [self postNotification:@"IAP_MSG" :@"无法获取产品信息，购买失败。"];
         return;
     }
     SKPayment * payment = [SKPayment paymentWithProduct:myProduct[0]];
@@ -85,18 +97,18 @@ static IAPPay * gInstance = nil;
 - (void)completeTransaction:(SKPaymentTransaction *)transaction {
    // NSString *product = transaction.payment.productIdentifier;
     NSLog(@"购买成功,order:%@",transaction.transactionIdentifier);
-    cocos2d::CCString *pTemp = cocos2d::CCString::createWithFormat("%s",transaction.transactionIdentifier.UTF8String);
-    cocos2d::CCNotificationCenter::sharedNotificationCenter()->postNotification("IAP_MSG",pTemp);
+    [self postNotification:@"IAP_MSG" :transaction.transactionIdentifier];
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
     
 }
 - (void)failedTransaction:(SKPaymentTransaction *)transaction {
     if(transaction.error.code != SKErrorPaymentCancelled) {
         NSLog(@"购买失败");
+        [self postNotification:@"IAP_MSG" :@"购买失败"];
     } else {
         NSLog(@"用户取消交易");
+        [self postNotification:@"IAP_MSG" :@"用户取消交易"];
     }
-    cocos2d::CCNotificationCenter::sharedNotificationCenter()->postNotification("IAP_MSG");
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 }
 - (void)restoreTransaction:(SKPaymentTransaction *)transaction {

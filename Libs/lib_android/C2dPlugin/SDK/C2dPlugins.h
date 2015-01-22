@@ -12,9 +12,6 @@
 #include <stdio.h>
 #include "cocos2d.h"
 
-typedef int (cocos2d::CCObject::*SEL_C2dCallBack)(const char*);
-
-#define c2dplugin_selector(_SELECTOR) (SEL_C2dCallBack)(&_SELECTOR)
 
 namespace C2dPlugins {
     
