@@ -15,7 +15,7 @@ IOS_IAP插件
 #### 3.API
 ```C++
     // 初始化IAP
-    const char* init(void)；
+    const char* init(void);
     // 购买物品
     const char* buy(const char* product);
 ```
