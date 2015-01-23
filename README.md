@@ -11,5 +11,5 @@ Cocos2d-x Plugins
             C2dTool plugin rm plugin platform
             
 ### 插件集合
->Plugins
->>ios_iap
+    >Plugins
+    >>ios_iap
