@@ -1,7 +1,8 @@
 Cocos2d-x plugins
 =======
-　　　命令行：
-　　　　　安装C2dPlugin SDK
+　　　命令行： <br>
+
+　　　　　安装C2dPlugin SDK <br>
 　　　　　C2dTool plugin init platform	<br/>
 
          卸载C2dPlugin SDK
