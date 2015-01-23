@@ -12,3 +12,9 @@ IOS_IAP插件
     plugin->invoke("buy","com.itspas.point2048");
     
 ```
+#### 3.API
+    // 初始化IAP
+    const char* init(void)；
+    // 购买物品
+    const char* buy(const char* product)
+    
