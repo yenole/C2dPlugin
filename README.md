@@ -11,5 +11,4 @@ Cocos2d-x Plugin
             C2dTool plugin rm plugin platform
             
 ### 插件集合
-        Plugins
-              ios_iap
+　　　　PLugins
