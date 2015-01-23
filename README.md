@@ -9,8 +9,5 @@ Cocos2d-x Plugins
         C2dTool plugin add plugin platform
     4.删除插件
         C2dTool plugin rm plugin platform
-            
-### 插件集合
->Plugins
->>ios_iap
->>>IOS内置IAP支付
+
+[博客](http://blog.itspas.com/)
