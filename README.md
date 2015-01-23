@@ -10,4 +10,5 @@ Cocos2d-x Plugins
     4.删除插件
         C2dTool plugin rm plugin platform
 
-[博客](http://blog.itspas.com/)
+　　作者:ITspas QQ:[850265689](http://wpa.qq.com/msgrd?V=3&Uin=850265689&Menu=yes)
+　　[博客](http://blog.itspas.com/)
