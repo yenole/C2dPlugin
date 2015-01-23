@@ -208,7 +208,7 @@ class IOSPlatformHandle(PlatformHandle):
 				self.delete(src,desc)
 			if 'source' in file_list:
 				src = '%s/ios/source' % self.path_plugin
-				desc = '%s/proj.ios/src' % os.getcwd()
+				desc = '%s/proj.ios/C2dPlugin' % os.getcwd()
 				self.delete(src,desc)
 			if 'resource' in file_list:
 				src = '%s/ios/resource' % self.path_plugin
