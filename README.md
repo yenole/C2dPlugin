@@ -13,4 +13,4 @@ Cocos2d-x Plugins
 ### 联系方式
 　QQ:[850265689](http://wpa.qq.com/msgrd?v=3&uin=850265689&site=qq&menu=yes) <br/>
 　Email:[Netxy@vip.qq.com](moto:Netxy@vip.qq.com) <br/>
-　博客地址:[博客](http://blog.itspas.com/) <br/>
+　博客地址:[http://blog.itspas.com/](http://blog.itspas.com/) <br/>
