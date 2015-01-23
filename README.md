@@ -1,4 +1,4 @@
-Cocos2d-x Plugin
+Cocos2d-x Plugins
 -----------------------
 ### 命令工具使用
         1.安装C2dPlugin
@@ -11,4 +11,5 @@ Cocos2d-x Plugin
             C2dTool plugin rm plugin platform
             
 ### 插件集合
-　　　　PLugins
+＞Plugins
+>>ios_iap
