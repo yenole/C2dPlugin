@@ -19,6 +19,8 @@ namespace C2dPlugins {
     {
     public:
     	C2dPlugin();
+        
+        ~C2dPlugin();
 
         const char* invoke(const char* funcName,...);
 
