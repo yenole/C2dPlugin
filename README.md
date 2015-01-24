@@ -9,6 +9,10 @@ Cocos2d-x Plugins
         C2dTool plugin add plugin platform
     4.删除插件
         C2dTool plugin rm plugin platform
+    5.生成android.mk
+        C2dTool android.mk
+        C2dTool android.mk proj.win32 proj.ios
+        C2dTool android.mk proj.ios_mac/ios
 
 
 QQ:[850265689](http://wpa.qq.com/msgrd?v=3&uin=850265689&site=qq&menu=yes) <br/>
