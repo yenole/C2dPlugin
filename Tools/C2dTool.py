@@ -38,8 +38,8 @@ class utils(object):
 
 	@staticmethod
 	def get_platform_info(platform):
-		isLua = not os.path.exists(utils.get_project_dir('/Classes'))
-		if isLua:
+		is3x = not os.path.exists(utils.get_project_dir('/Classes'))
+		if is3x:
 			info = {'res':'/res','src':'/frameworks/runtime-src/'}
 		else:
 			info = {'res':'/Resources','src':'/'}
@@ -169,6 +169,75 @@ class pluginModule(object):
 			return utils.plugin_operate(sys.argv[3],sys.argv[4],1)
 		return 'plugin remove error!'
 
+class androidmkModule(module):
+	def __init__(self):
+		super(androidmkModule, self).__init__()
+		self.__path_project = None
+		self.__mk_file = None
+		self.__cpp_file = []
+		self.__h_file = []
+		
+	def handle(self):
+		info = utils.get_platform_info('android')
+		self.__mk_file = utils.get_project_dir('%s/jni/android.mk' % info['src'])
+		if not os.path.exists(self.__mk_file):
+			return 'not found android.mk file!'
+		self.__path_project = utils.get_project_dir('%s/..' % info['src'])
+		sys.argv.append('Classes')
+		for i in xrange(2,len(sys.argv)):
+			path = '%s/%s' % (self.__path_project,sys.argv[i])
+			if self.__scan_file(path) > 0:
+				self.__h_file.append('$(LOCAL_PATH)/../..%s' % path[len(self.__path_project):])
+		return self.__write_to_mkfile()
+
+
+
+	def __scan_file(self,path):
+		file_list = os.listdir(path)
+		count = 0
+		for file_name in file_list:
+			if file_name.startswith('.') or file_name == 'main.cpp':
+				continue
+			file_name = path + '/' + file_name
+			if os.path.isdir(file_name) and self.__scan_file(file_name) > 0:
+				self.__h_file.append('$(LOCAL_PATH)/../..%s' % file_name[len(self.__path_project):])
+			elif file_name.endswith('.cpp'):
+				count += 1
+				self.__cpp_file.append('../..%s' % file_name[len(self.__path_project):])
+		return count
+
+	def __write_to_mkfile(self):
+		try:
+			mkfile = open(self.__mk_file)
+			self.__cnt = mkfile.read()
+			key = 'LOCAL_SRC_FILES'
+			idx = self.__cnt.find(key)
+			bcnt = self.__cnt[:idx + len(key)] + ' := '
+			key = 'LOCAL_C_INCLUDES'
+			idx = self.__cnt.find(key)
+			icnt = self.__cnt[idx:idx + len(key)] + ' := '
+			ecnt = self.__cnt[idx + len(key) + 4:]
+			idx = ecnt.find('\x0A\x0A')
+			ecnt = ecnt[idx:]
+
+			count = len(self.__cpp_file)
+			for i,v in enumerate(self.__cpp_file):
+				bcnt += v + ('\x20\x5C\x0A\x09\x09\x09\x09' if i < count - 1 else '')
+
+			count = len(self.__h_file)
+			for i,v in enumerate(self.__h_file):
+				icnt +=  v + ('\x20\x5C\x0A\x09\x09\x09\x09\x20' if i < count - 1 else '')
+
+			mkfile = open(self.__mk_file,'w')
+			mkfile.write(bcnt + '\x0A\x0A' + icnt + ecnt)
+
+			mkfile.close()
+			return 'build android.mk file successful!'
+
+		except Exception, e:
+			mkfile.close
+			return 'Error: build android.mk fail!'
+			
 
 		
 class disponseModule(object):
@@ -176,7 +245,7 @@ class disponseModule(object):
 		super(disponseModule, self).__init__()
 	
 	def handle(self):
-		mds = {'plugin':pluginModule}
+		mds = {'plugin':pluginModule,'android.mk':androidmkModule}
 		if len(sys.argv) > 1 and sys.argv[1] in mds:
 			print('MSG:%s' % mds[sys.argv[1]]().handle())
 		else:
