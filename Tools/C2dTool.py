@@ -64,8 +64,12 @@ class utils(object):
 	@staticmethod
 	def sdk_operate(platform,operate):
 		file_desc = '%s/C2dPlugin' % utils.get_project_dir(utils.get_sdk_info())
-		file_src = utils.get_sdk_dir('/Libs/lib_%s' % platform)
+		file_src = utils.get_sdk_dir('/Libs/lib_%s/sdk' % platform)
 		[utils.copy,utils.delete][operate](file_src,file_desc)
+		if platform == 'android':
+			file_src = utils.get_sdk_dir('/Libs/lib_%s/lib' % platform)
+			file_desc = '%s/../proj.android/libs' % utils.get_project_dir(utils.get_sdk_info())
+			[utils.copy,utils.delete][operate](file_src,file_desc)
 		return 'C2dPlugin SDK %sinstall successfull!' % ['','un'][operate]
 
 	@staticmethod
